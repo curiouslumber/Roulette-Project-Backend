@@ -1,0 +1,20 @@
+version: '3'
+services:
+  node:
+    image: node:latest
+    command: sh -c "npm install && node app.js"
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password # Change this to your desired MySQL root password
+      MYSQL_DATABASE: mydatabase # Change this to your desired database name
+    ports:
+      - "3306:3306"

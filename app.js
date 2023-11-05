@@ -1,16 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
 const app = express();
-const http = require('http');
-
-const hostname = 'localhost';
-const port = 3000;
-
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
-});
 
 const db = mysql.createConnection({
   host: 'mysql', // This is the name of the MySQL service in Docker
@@ -34,6 +24,7 @@ app.get('/api/users', (req, res) => {
   });
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

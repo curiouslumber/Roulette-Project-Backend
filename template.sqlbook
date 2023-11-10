@@ -158,9 +158,3 @@ CREATE TABLE  CurrentGameBetResult(
     bet_result VARCHAR (200),
     FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
 )
--- SQLBook: Code
-#Inserting Data
--- SQLBook: Code
-SELECT * FROM `Users`
--- SQLBook: Code
-INSERT INTO Users (email, role) VALUES ('user1@example.com', 'user');

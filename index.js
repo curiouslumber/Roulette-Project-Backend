@@ -20,17 +20,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Create
 app.post('/users', (req, res) => {
-  const { email, role } = req.body;
-  const query = 'INSERT INTO Users (email, role) VALUES (?, ?)';
+  const {name,   email, password, role } = req.body;
+  const query = 'INSERT INTO Users (name, email, password, role) VALUES (?, ?, ?, ?)';
 
-  connection.query(query, [email, role], (err, result) => {
+  connection.query(query, [name, email, password, role], (err, result) => {
     if (err) {
       console.error('Error executing query:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
 
-    res.json({ id: result.insertId, email, role });
+    res.json({ id: result.insertId, name, email, password, role });
   });
 });
 
@@ -49,7 +49,25 @@ app.get('/users', (req, res) => {
   });
 });
 
-// Read one
+app.get('/users/email/:email', (req, res) => {
+    const userEmail = req.params.email;
+    const query = 'SELECT email, password FROM Users WHERE email = ?';
+
+    connection.query(query, [userEmail], (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+
+        if (results.length === 0) {
+            res.status(404).send('User not found');
+        } else {
+            res.json(results[0]);
+        }
+    });
+});
+
 app.get('/users/:id', (req, res) => {
   const userId = req.params.id;
   const query = 'SELECT * FROM Users WHERE user_id = ?';

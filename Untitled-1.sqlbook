@@ -1,0 +1,166 @@
+-- SQLBook: Code
+-- Active: 1699477623950@@localhost@3306@roulette_game
+USE roulette_game
+-- SQLBook: Code
+CREATE DATABASE roulette_game
+-- SQLBook: Markup
+### Selecting Tables from the database
+-- SQLBook: Code
+SELECT * FROM Users
+-- SQLBook: Code
+SELECT * FROM `UserDashboard`
+-- SQLBook: Code
+SELECT * FROM GameStats
+-- SQLBook: Code
+SELECT * FROM TotalGames
+-- SQLBook: Code
+SELECT * FROM UserDepositWallet
+-- SQLBook: Code
+SELECT * FROM UserDemoWallet
+-- SQLBook: Code
+SELECT * FROM UserWinningWallet
+-- SQLBook: Code
+SELECT * FROM UserCurrentGame
+-- SQLBook: Code
+SELECT * FROM UserCurrentGameBet
+-- SQLBook: Code
+SELECT * FROM UserCurrentGameWallet
+-- SQLBook: Code
+SELECT * FROM UserDemoGame
+-- SQLBook: Code
+SELECT * FROM UserDemoGameWallet
+-- SQLBook: Code
+SELECT * FROM CurrentGame
+-- SQLBook: Code
+SELECT * FROM CurrentGameBetResult
+-- SQLBook: Code
+DROP Table Users
+-- SQLBook: Markup
+### Creating Tables for the database 
+-- SQLBook: Code
+-- Active: 1699477623950@@localhost@3306@roulette_game
+CREATE TABLE Users(
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(200),
+    role VARCHAR(10),
+    password VARCHAR(64)
+);
+-- SQLBook: Code
+CREATE TABLE UserCurrentGame (
+    user_id INT,
+    game_id INT AUTO_INCREMENT PRIMARY KEY,
+    gameType VARCHAR(255),
+    gameStatus VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+-- SQLBook: Code
+CREATE TABLE UserDashboard (
+    user_id INT,
+    current_balance INT,
+    number_of_games_played INT,
+    number_of_wins INT,
+    number_of_lossess INT,
+    number_of_demo_games_played INT,
+    number_of_demo_wins INT,
+    number_of_demo_lossess INT,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+)
+-- SQLBook: Code
+CREATE TABLE UserDepositWallet (
+    user_id INT,
+    wallet_balance INT,
+    last_deposit_date VARCHAR(255),
+    last_deposit_amount INT,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+-- SQLBook: Code
+CREATE TABLE UserDemoWallet(
+    user_id INT,
+    wallet_balance INT,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+)
+-- SQLBook: Code
+CREATE TABLE UserWinningWallet (
+    user_id INT,
+    wallet_balance INT,
+    last_withdraw_date INT,
+    last_withdraw_amount INT,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+)
+-- SQLBook: Code
+CREATE TABLE UserCurrentGameBet(
+    game_id INT,
+    user_id INT,
+    user_latest_bet VARCHAR(255),
+    user_latest_bet_amount INT,
+    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
+)
+-- SQLBook: Code
+CREATE TABLE UserCurrentGameWallet (
+    user_id INT,
+    game_id INT,
+    user_balance INT,
+    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
+)
+-- SQLBook: Code
+CREATE TABLE UserDemoGame (
+    user_id INT,
+    game_id INT,
+    user_latest_bet VARCHAR(255),
+    user_latest_bet_amount INT,
+    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
+)
+-- SQLBook: Code
+CREATE TABLE UserDemoGameWallet (
+    user_id INT,
+    game_id INT,
+    user_balance INT,
+    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
+)
+-- SQLBook: Code
+CREATE TABLE GameStats (
+    user_id INT,
+    no_of_games INT,
+    no_of_wins INT,
+    no_of_lossess INT,
+    highest_money_won INT,
+    highest_money_lost INT,
+    total_money_won INT,
+    total_money_lost INT,
+    FOREIGN KEY(user_id) REFERENCES Users(user_id)
+)
+-- SQLBook: Code
+CREATE TABLE TotalGames(
+    user_id INT,
+    game_id INT,
+    gameStatus VARCHAR(20),
+    played_date VARCHAR(20),
+    played_time VARCHAR(20),
+    users_bots_ids VARCHAR(255),
+    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
+)
+-- SQLBook: Code
+CREATE TABLE CurrentGame(
+    last_user INT,
+    game_id INT,
+    last_bet VARCHAR(255),
+    game_status VARCHAR(20),
+    current_leader VARCHAR(255),
+    FOREIGN KEY(last_user, game_id)  REFERENCES UserCurrentGame(user_id, game_id)
+)
+-- SQLBook: Code
+CREATE TABLE  CurrentGameBetResult(
+    game_id INT,
+    user_id INT,
+    user_bet VARCHAR(200),
+    bet_result VARCHAR (200),
+    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
+)
+-- SQLBook: Code
+#Inserting Data
+-- SQLBook: Code
+SELECT * FROM `Users`
+-- SQLBook: Code
+INSERT INTO Users (email, role) VALUES ('user1@example.com', 'user');

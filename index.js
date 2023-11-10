@@ -1,5 +1,7 @@
-
+const express = require('express');
 const mysql = require('mysql');
+
+const app = express();
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -8,20 +10,31 @@ const connection = mysql.createConnection({
     database: 'roulette_game'
 });
 
-connection.connect((err) => {
+connection.connect(err => {
     if (err) {
-        console.error('Error connecting to MySQL database:', err);
-        return;
+      console.error('Error connecting to MySQL:', err);
+      return;
     }
-    console.log('Connected to MySQL database!');
-    
-    connection.query('SELECT * FROM Users', (error, results, fields) => {
-        if (error) {
-            console.error('Error executing query:', error);
-            return;
-        }
-        console.log('Query results:', results);
+    console.log('Connected to MySQL');
+  });
+  
+  // Define your route to fetch data
+  app.get('/users', (req, res) => {
+    const query = 'SELECT * FROM Users';
+  
+    connection.query(query, (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+  
+      res.json(results);
     });
-
-    connection.end();
-});
+  });
+  
+  // Start the server
+  const PORT = 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });

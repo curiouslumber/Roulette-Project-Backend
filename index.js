@@ -51,7 +51,7 @@ app.get('/users', (req, res) => {
 
 app.get('/users/email/:email', (req, res) => {
     const userEmail = req.params.email;
-    const query = 'SELECT email, password FROM Users WHERE email = ?';
+    const query = 'SELECT * FROM Users WHERE email = ?';
 
     connection.query(query, [userEmail], (err, results) => {
         if (err) {

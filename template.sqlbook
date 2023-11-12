@@ -60,10 +60,6 @@ SELECT * FROM Users
 INSERT INTO ActiveUsers (user_id, last_active_date, last_active_time)
 VALUES (6, '2022-12-13', '21:18:00');
 -- SQLBook: Code
-DELETE FROM `ActiveUsers` WHERE user_id=6
--- SQLBook: Code
-DROP TABLE ActiveUsers
--- SQLBook: Code
 -- Active: 1699477623950@@localhost@3306@roulette_game
 SELECT user_id, DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM `ActiveUsers`
 -- SQLBook: Code

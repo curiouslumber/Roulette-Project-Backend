@@ -48,14 +48,24 @@ CREATE TABLE Users(
 );
 -- SQLBook: Code
 CREATE TABLE ActiveUsers (
-    user_id INT,
+    user_id INT UNIQUE,
     last_active_date DATE,
     last_active_time TIME,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 -- SQLBook: Code
-SELECT * FROM `ActiveUsers`
+SELECT * FROM Users
+-- SQLBook: Code
+INSERT INTO ActiveUsers (user_id, last_active_date, last_active_time)
+VALUES (6, '2022-12-13', '21:18:00');
+-- SQLBook: Code
+DELETE FROM `ActiveUsers` WHERE user_id=6
+-- SQLBook: Code
+DROP TABLE ActiveUsers
+-- SQLBook: Code
+-- Active: 1699477623950@@localhost@3306@roulette_game
+SELECT user_id, DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM `ActiveUsers`
 -- SQLBook: Code
 CREATE TABLE UserCurrentGame (
     user_id INT,

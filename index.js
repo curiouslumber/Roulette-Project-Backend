@@ -87,6 +87,59 @@ app.get('/users/:id', (req, res) => {
   });
 });
 
+
+// Get all active users
+app.get('/users/active/active', (req, res) => {
+  const query = `SELECT user_id, DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM \`ActiveUsers\``;
+
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Create
+app.post('/users/active', (req, res) => {
+  const { user_id, last_active_date, last_active_time } = req.body;
+  const query = 'INSERT INTO  ActiveUsers(user_id, last_active_date, last_active_time) VALUES (?, ?, ?)';
+
+  connection.query(query, [user_id,  last_active_date, last_active_time], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(201).send('User added to active users');
+  });
+});
+
+// Delete Active User with user_id
+app.delete('/users/active/:id', (req, res) => {
+  const userId = req.params.id;
+  const query = 'DELETE FROM ActiveUsers WHERE user_id = ?';
+
+  connection.query(query, [userId], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    if (result.affectedRows === 0) {
+      res.status(404).send('User not found');
+    } else {
+      res.status(204).send(); // No content
+    }
+  });
+});
+
+
+
 // Delete
 app.delete('/users/:id', (req, res) => {
   const userId = req.params.id;

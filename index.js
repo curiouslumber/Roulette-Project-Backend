@@ -103,6 +103,38 @@ app.get('/users/active/active', (req, res) => {
   });
 });
 
+// Get all user dashboards
+app.get('/users/dashboard/dashboard', (req, res) => {
+  const query = 'SELECT * FROM UserDashboard';
+
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+
+// Create User Dashboard
+app.post('/users/dashboard', (req, res) => {
+  const { user_id } = req.body;
+  const query = 'INSERT INTO UserDashboard (user_id, current_balance, number_of_games_played, number_of_wins, number_of_lossess, current_demo_balance, number_of_demo_games_played, number_of_demo_wins, number_of_demo_lossess) VALUES (?, 0, 0, 0, 0, 1500, 0, 0, 0)';
+
+  connection.query(query, [user_id], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(201).send('User dashboard created');
+  });
+});
+
+
 // Create
 app.post('/users/active', (req, res) => {
   const { user_id, last_active_date, last_active_time } = req.body;
@@ -138,6 +170,26 @@ app.delete('/users/active/:id', (req, res) => {
   });
 });
 
+// Delete User Dashboard with user_id
+app.delete('/users/dashboard/:id', (req, res) => {
+  const userId = req.params.id;
+  const query = 'DELETE FROM UserDashboard WHERE user_id = ?';
+
+  connection.query(query, [userId], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    if (result.affectedRows === 0) {
+      res.status(404).send('User dashboard not found');
+    } else {
+      res.status(204).send(); // No content
+    }
+  });
+});
+
 
 
 // Delete
@@ -161,6 +213,4 @@ app.delete('/users/:id', (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.listen(PORT, '192.168.1.35' );

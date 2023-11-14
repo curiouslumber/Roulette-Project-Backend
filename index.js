@@ -118,11 +118,31 @@ app.get('/users/dashboard/dashboard', (req, res) => {
   });
 });
 
+// Get user dashboard with user_id
+app.get('/users/dashboard/:id', (req, res) => {
+  const userId = req.params.id;
+  const query = 'SELECT * FROM UserDashboard WHERE user_id = ?';
+
+  connection.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).send('User dashboard not found');
+    } else {
+      res.json(results[0]);
+    }
+  });
+});
+
 
 // Create User Dashboard
 app.post('/users/dashboard', (req, res) => {
   const { user_id } = req.body;
-  const query = 'INSERT INTO UserDashboard (user_id, current_balance, number_of_games_played, number_of_wins, number_of_lossess, current_demo_balance, number_of_demo_games_played, number_of_demo_wins, number_of_demo_lossess) VALUES (?, 0, 0, 0, 0, 1500, 0, 0, 0)';
+  const query = 'INSERT INTO UserDashboard (user_id, current_balance, number_of_games_played, number_of_wins, number_of_lossess, total_amount_won, total_amount_lost, current_demo_balance, number_of_demo_games_played, number_of_demo_wins, number_of_demo_lossess, total_demo_amount_won, total_demo_amount_lost) VALUES (?, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0)';
 
   connection.query(query, [user_id], (err, result) => {
     if (err) {

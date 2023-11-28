@@ -87,19 +87,23 @@ app.get('/users/:id', (req, res) => {
   });
 });
 
+//Get user by id
+app.get('/users/active/:id', (req, res) => {
+  const userId = req.params.id;
+  const query = `SELECT user_id,  DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM ActiveUsers WHERE user_id = ?`;
 
-// Get all active users
-app.get('/users/active/active', (req, res) => {
-  const query = `SELECT user_id, DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM \`ActiveUsers\``;
-
-  connection.query(query, (err, results) => {
+  connection.query(query, [userId], (err, results) => {
     if (err) {
       console.error('Error executing query:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
 
-    res.json(results);
+    if (results.length === 0) {
+      res.status(404).send('User not found');
+    } else {
+      res.json(results[0]);
+    }
   });
 });
 
@@ -158,7 +162,7 @@ app.post('/users/dashboard', (req, res) => {
 // Create
 app.post('/users/active', (req, res) => {
   const { user_id, last_active_date, last_active_time } = req.body;
-  const query = 'INSERT INTO  ActiveUsers(user_id, last_active_date, last_active_time) VALUES (?, ?, ?)';
+  const query = 'INSERT INTO  ActiveUsers(user_id, isActive, last_active_date, last_active_time) VALUES (? , FALSE, ?, ?)';
 
   connection.query(query, [user_id,  last_active_date, last_active_time], (err, result) => {
     if (err) {
@@ -167,6 +171,22 @@ app.post('/users/active', (req, res) => {
       return;
     }
     res.status(201).send('User added to active users');
+  });
+});
+
+// Update Active Userimplements BroadcastReceiver 
+app.put('/users/active/:id', (req, res) => {
+  const userId = req.params.id;
+  const { last_active_date, last_active_time } = req.body;
+  const query = 'UPDATE ActiveUsers SET last_active_date = ?, last_active_time = ? WHERE user_id = ?';
+
+  connection.query(query, [last_active_date, last_active_time, userId], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(204).send();
   });
 });
 

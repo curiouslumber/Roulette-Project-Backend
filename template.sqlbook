@@ -52,6 +52,7 @@ CREATE TABLE Users(
 -- SQLBook: Code
 CREATE TABLE ActiveUsers (
     user_id INT UNIQUE,
+    isActive BOOLEAN,
     last_active_date DATE,
     last_active_time TIME,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)

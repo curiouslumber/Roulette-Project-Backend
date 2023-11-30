@@ -65,7 +65,7 @@ SELECT * FROM Users
 DROP TABLE `ActiveUsers`
 -- SQLBook: Code
 -- Active: 1699477623950@@localhost@3306@roulette_game
-SELECT * FROM ActiveUsers
+SELECT * FROM `UserDashboard`
 -- SQLBook: Code
 -- Active: 1699477623950@@localhost@3306@roulette_game
 SELECT user_id, DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM `ActiveUsers`
@@ -78,25 +78,26 @@ CREATE TABLE UserCurrentGame (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 -- SQLBook: Code
-
+DROP TABLE `UserDashboard`
 -- SQLBook: Code
 -- Active: 1699477623950@@localhost@3306@roulette_game
 CREATE TABLE UserDashboard (
     user_id INT UNIQUE,
+    deposit_amount INT,
     current_balance INT,
     number_of_games_played INT,
     number_of_wins INT,
     number_of_lossess INT,
+    winning_amount INT,
     total_amount_won INT,
     total_amount_lost INT,
-    current_demo_balance INT,
-    number_of_demo_games_played INT,
-    number_of_demo_wins INT,
-    number_of_demo_lossess INT,
-    total_demo_amount_won INT,
-    total_demo_amount_lost INT,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 )
+-- SQLBook: Code
+-- Deposit money
+UPDATE UserDashboard SET current_balance = current_balance + 1000 WHERE user_id = 8
+-- SQLBook: Code
+
 -- SQLBook: Code
 INSERT INTO UserDashboard (user_id, current_balance, number_of_games_played, number_of_wins, number_of_lossess, total_amount_won, total_amount_loss, current_demo_balance, number_of_demo_games_played, number_of_demo_wins, number_of_demo_lossess, total_demo_amount_won, total_demo_amount_loss)
 VALUES (7, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0);

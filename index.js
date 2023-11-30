@@ -146,7 +146,7 @@ app.get('/users/dashboard/:id', (req, res) => {
 // Create User Dashboard
 app.post('/users/dashboard', (req, res) => {
   const { user_id } = req.body;
-  const query = 'INSERT INTO UserDashboard (user_id, current_balance, number_of_games_played, number_of_wins, number_of_lossess, total_amount_won, total_amount_lost, current_demo_balance, number_of_demo_games_played, number_of_demo_wins, number_of_demo_lossess, total_demo_amount_won, total_demo_amount_lost) VALUES (?, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0)';
+  const query = 'INSERT INTO UserDashboard(user_id, deposit_amount, current_balance, number_of_games_played, number_of_wins, number_of_lossess, winning_amount, total_amount_won, total_amount_lost) VALUES (? , 0, 0, 0, 0, 0, 0, 0, 0)';
 
   connection.query(query, [user_id], (err, result) => {
     if (err) {
@@ -173,6 +173,25 @@ app.post('/users/active', (req, res) => {
     res.status(201).send('User added to active users');
   });
 });
+
+// Update deposit amount with new deposit amount using user_id and update current balance such that current balance.
+app.put('/users/dashboard/deposit/:id', (req, res) => {
+  const userId = req.params.id;
+  const { deposit_amount, current_balance } = req.body;
+  const query = 'UPDATE UserDashboard SET deposit_amount = ?, current_balance = ? WHERE user_id = ?';
+
+  connection.query(query, [deposit_amount, current_balance, userId], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(204).send();
+  });
+}
+);
+
+
 
 // Update Active Userimplements BroadcastReceiver 
 app.put('/users/active/:id', (req, res) => {

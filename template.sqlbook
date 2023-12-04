@@ -1,14 +1,19 @@
 -- SQLBook: Markup
+## Roulette - Database SQL Book
+-- SQLBook: Markup
 ### Selecting Tables from the database
 -- SQLBook: Code
 -- Active: 1701694913539@@localhost@3306@roulette
-SELECT * FROM Users
+SELECT * FROM `Users`
 -- SQLBook: Code
 -- Active: 1701694913539@@localhost@3306@roulette
 SELECT * FROM `ActiveUsers`
 -- SQLBook: Code
 -- Active: 1701694913539@@localhost@3306@roulette
 SELECT * FROM `UserDashboard`
+-- SQLBook: Code
+-- Active: 1701694913539@@localhost@3306@roulette
+SELECT * FROM `UserGames`
 -- SQLBook: Markup
 ### Creating Tables for the database 
 -- SQLBook: Code
@@ -32,18 +37,6 @@ CREATE TABLE ActiveUsers (
 
 -- SQLBook: Code
 -- Active: 1701694913539@@localhost@3306@roulette
-SELECT user_id, DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM `ActiveUsers`
--- SQLBook: Code
--- Active: 1701694913539@@localhost@3306@roulette
-CREATE TABLE UserCurrentGame (
-    user_id INT,
-    game_id INT AUTO_INCREMENT PRIMARY KEY,
-    gameType VARCHAR(255),
-    gameStatus VARCHAR(255),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
--- SQLBook: Code
--- Active: 1701694913539@@localhost@3306@roulette
 CREATE TABLE UserDashboard (
     user_id INT UNIQUE,
     deposit_amount INT,
@@ -58,24 +51,6 @@ CREATE TABLE UserDashboard (
 )
 -- SQLBook: Code
 -- Active: 1701694913539@@localhost@3306@roulette
-CREATE TABLE CurrentGame(
-    last_user INT,
-    game_id INT,
-    last_bet VARCHAR(255),
-    game_status VARCHAR(20),
-    current_leader VARCHAR(255),
-    FOREIGN KEY(last_user, game_id)  REFERENCES UserCurrentGame(user_id, game_id)
-)
--- SQLBook: Code
-CREATE TABLE  CurrentGameBetResult(
-    game_id INT,
-    user_id INT,
-    user_bet VARCHAR(200),
-    bet_result VARCHAR (200),
-    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
-)
--- SQLBook: Code
--- Active: 1701694913539@@localhost@3306@roulette
 CREATE TABLE UserGames(
     gameID INT PRIMARY KEY AUTO_INCREMENT,
     userID INT,
@@ -84,5 +59,8 @@ CREATE TABLE UserGames(
     last_bet_won_lost VARCHAR(20),
     FOREIGN KEY(userID) REFERENCES Users(user_id)
 )
+-- SQLBook: Markup
+### Performing  Functions on table
 -- SQLBook: Code
-SELECT * FROM UserGames
+-- Active: 1701694913539@@localhost@3306@roulette
+SELECT user_id, DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM `ActiveUsers`

@@ -1,47 +1,18 @@
--- SQLBook: Code
--- Active: 1699477623950@@localhost@3306@roulette_game
-USE roulette_game
--- SQLBook: Code
-CREATE DATABASE roulette_game
 -- SQLBook: Markup
 ### Selecting Tables from the database
 -- SQLBook: Code
--- Active: 1699477623950@@localhost@3306@roulette_game
+-- Active: 1701694913539@@localhost@3306@roulette
 SELECT * FROM Users
 -- SQLBook: Code
+-- Active: 1701694913539@@localhost@3306@roulette
+SELECT * FROM `ActiveUsers`
+-- SQLBook: Code
+-- Active: 1701694913539@@localhost@3306@roulette
 SELECT * FROM `UserDashboard`
--- SQLBook: Code
-SELECT * FROM GameStats
--- SQLBook: Code
-SELECT * FROM TotalGames
--- SQLBook: Code
-SELECT * FROM UserDepositWallet
--- SQLBook: Code
-SELECT * FROM UserDemoWallet
--- SQLBook: Code
-SELECT * FROM UserWinningWallet
--- SQLBook: Code
-SELECT * FROM UserCurrentGame
--- SQLBook: Code
-SELECT * FROM UserCurrentGameBet
--- SQLBook: Code
-SELECT * FROM UserCurrentGameWallet
--- SQLBook: Code
-SELECT * FROM UserDemoGame
--- SQLBook: Code
-SELECT * FROM UserDemoGameWallet
--- SQLBook: Code
-SELECT * FROM CurrentGame
--- SQLBook: Code
-SELECT * FROM CurrentGameBetResult
--- SQLBook: Code
-DROP Table Users
 -- SQLBook: Markup
 ### Creating Tables for the database 
 -- SQLBook: Code
-USE roulette_game
--- SQLBook: Code
--- Active: 1699477623950@@localhost@3306@roulette_game
+-- Active: 1701694913539@@localhost@3306@roulette
 CREATE TABLE Users(
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100),
@@ -50,6 +21,7 @@ CREATE TABLE Users(
     password VARCHAR(64)
 );
 -- SQLBook: Code
+-- Active: 1701694913539@@localhost@3306@roulette
 CREATE TABLE ActiveUsers (
     user_id INT UNIQUE,
     isActive BOOLEAN,
@@ -59,17 +31,10 @@ CREATE TABLE ActiveUsers (
 );
 
 -- SQLBook: Code
--- Active: 1699477623950@@localhost@3306@roulette_game
-SELECT * FROM Users
--- SQLBook: Code
-DROP TABLE `ActiveUsers`
--- SQLBook: Code
--- Active: 1699477623950@@localhost@3306@roulette_game
-SELECT * FROM `UserDashboard`
--- SQLBook: Code
--- Active: 1699477623950@@localhost@3306@roulette_game
+-- Active: 1701694913539@@localhost@3306@roulette
 SELECT user_id, DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM `ActiveUsers`
 -- SQLBook: Code
+-- Active: 1701694913539@@localhost@3306@roulette
 CREATE TABLE UserCurrentGame (
     user_id INT,
     game_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -78,9 +43,7 @@ CREATE TABLE UserCurrentGame (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 -- SQLBook: Code
-DROP TABLE `UserDashboard`
--- SQLBook: Code
--- Active: 1699477623950@@localhost@3306@roulette_game
+-- Active: 1701694913539@@localhost@3306@roulette
 CREATE TABLE UserDashboard (
     user_id INT UNIQUE,
     deposit_amount INT,
@@ -94,99 +57,7 @@ CREATE TABLE UserDashboard (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 )
 -- SQLBook: Code
--- Deposit money
-UPDATE UserDashboard SET current_balance = current_balance + 1000 WHERE user_id = 8
--- SQLBook: Code
-
--- SQLBook: Code
-INSERT INTO UserDashboard (user_id, current_balance, number_of_games_played, number_of_wins, number_of_lossess, total_amount_won, total_amount_loss, current_demo_balance, number_of_demo_games_played, number_of_demo_wins, number_of_demo_lossess, total_demo_amount_won, total_demo_amount_loss)
-VALUES (7, 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0);
-
--- SQLBook: Code
--- Active: 1699477623950@@localhost@3306@roulette_game
-SELECT * FROM `UserDashboard`
--- SQLBook: Code
-INSERT INTO UserDashboard (user_id, current_balance, number_of_games_played, number_of_wins, number_of_lossess, current_demo_balance, number_of_demo_games_played, number_of_demo_wins, number_of_demo_lossess)
-VALUES (6, 0, 0, 0, 0, 1500, 0, 0, 0);
-
--- SQLBook: Code
-DROP TABLE `UserDashboard`
--- SQLBook: Code
-CREATE TABLE UserDepositWallet (
-    user_id INT,
-    wallet_balance INT,
-    last_deposit_date VARCHAR(255),
-    last_deposit_amount INT,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
-
--- SQLBook: Code
-CREATE TABLE UserDemoWallet(
-    user_id INT,
-    wallet_balance INT,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-)
--- SQLBook: Code
-CREATE TABLE UserWinningWallet (
-    user_id INT,
-    wallet_balance INT,
-    last_withdraw_date INT,
-    last_withdraw_amount INT,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-)
--- SQLBook: Code
-CREATE TABLE UserCurrentGameBet(
-    game_id INT,
-    user_id INT,
-    user_latest_bet VARCHAR(255),
-    user_latest_bet_amount INT,
-    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
-)
--- SQLBook: Code
-CREATE TABLE UserCurrentGameWallet (
-    user_id INT,
-    game_id INT,
-    user_balance INT,
-    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
-)
--- SQLBook: Code
-CREATE TABLE UserDemoGame (
-    user_id INT,
-    game_id INT,
-    user_latest_bet VARCHAR(255),
-    user_latest_bet_amount INT,
-    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
-)
--- SQLBook: Code
-CREATE TABLE UserDemoGameWallet (
-    user_id INT,
-    game_id INT,
-    user_balance INT,
-    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
-)
--- SQLBook: Code
-CREATE TABLE GameStats (
-    user_id INT,
-    no_of_games INT,
-    no_of_wins INT,
-    no_of_lossess INT,
-    highest_money_won INT,
-    highest_money_lost INT,
-    total_money_won INT,
-    total_money_lost INT,
-    FOREIGN KEY(user_id) REFERENCES Users(user_id)
-)
--- SQLBook: Code
-CREATE TABLE TotalGames(
-    user_id INT,
-    game_id INT,
-    gameStatus VARCHAR(20),
-    played_date VARCHAR(20),
-    played_time VARCHAR(20),
-    users_bots_ids VARCHAR(255),
-    FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
-)
--- SQLBook: Code
+-- Active: 1701694913539@@localhost@3306@roulette
 CREATE TABLE CurrentGame(
     last_user INT,
     game_id INT,
@@ -203,3 +74,15 @@ CREATE TABLE  CurrentGameBetResult(
     bet_result VARCHAR (200),
     FOREIGN KEY(user_id, game_id) REFERENCES UserCurrentGame(user_id, game_id)
 )
+-- SQLBook: Code
+-- Active: 1701694913539@@localhost@3306@roulette
+CREATE TABLE UserGames(
+    gameID INT PRIMARY KEY AUTO_INCREMENT,
+    userID INT,
+    gameStatus VARCHAR(20),
+    last_bet_amount INT,
+    last_bet_won_lost VARCHAR(20),
+    FOREIGN KEY(userID) REFERENCES Users(user_id)
+)
+-- SQLBook: Code
+SELECT * FROM UserGames

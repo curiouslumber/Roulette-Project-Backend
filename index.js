@@ -142,6 +142,40 @@ app.get('/users/dashboard/:id', (req, res) => {
   });
 });
 
+// Get all games
+app.get('/games', (req, res) => {
+  const query = 'SELECT * FROM UserGames';
+
+  connection.query(query, (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      res.json(results);
+    });
+});
+
+
+// Get games with user_id
+app.get('/users/:id/game', (req, res) => {
+  const userId = req.params.id;
+  const query = 'SELECT * FROM UserGames WHERE userID = ?';
+
+  connection.query(query, [userId], (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+
+      if (results.length === 0) {
+        res.status(404).send('No games found');
+      } else {
+        res.json(results);
+      }
+    });
+});
 
 // Create User Dashboard
 app.post('/users/dashboard', (req, res) => {
@@ -156,6 +190,21 @@ app.post('/users/dashboard', (req, res) => {
     }
     res.status(201).send('User dashboard created');
   });
+});
+
+// Start a new game
+app.post('/users/:id/game', (req, res) => {
+  const userId = req.params.id;
+  const { user_id, move_num, game_status, last_bet_amount, last_bet_won_lost} = req.body;
+  const query = 'INSERT INTO UserGames( userID, moveNum, gameStatus, last_bet_amount, last_bet_won_lost) VALUES (?, ?, ?, ?, ?)';
+  connection.query(query, [user_id, move_num, game_status, last_bet_amount, last_bet_won_lost], (err, result) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      res.status(201).send('Game started');
+    });
 });
 
 

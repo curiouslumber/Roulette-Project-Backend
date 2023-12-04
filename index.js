@@ -156,6 +156,20 @@ app.get('/games', (req, res) => {
     });
 });
 
+// Get number of games
+app.get('/games/number', (req, res) => {
+  const query = 'SELECT MAX(gameID) AS number_of_games FROM UserGames';
+
+  connection.query(query, (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      res.json(results[0]);
+    });
+});
+
 
 // Get games with user_id
 app.get('/users/:id/game', (req, res) => {
@@ -195,9 +209,9 @@ app.post('/users/dashboard', (req, res) => {
 // Start a new game
 app.post('/users/:id/game', (req, res) => {
   const userId = req.params.id;
-  const { user_id, game_status, move_num, last_bet_amount, last_bet_won_lost} = req.body;
-  const query = 'INSERT INTO UserGames( userID, gameStatus, move_num, last_bet_amount, last_bet_won_lost) VALUES (?, ?, ?, ?, ?)';
-  connection.query(query, [user_id,  game_status, move_num, last_bet_amount, last_bet_won_lost], (err, result) => {
+  const { game_id, user_id, game_status, move_num, last_bet_amount, last_bet_won_lost} = req.body;
+  const query = 'INSERT INTO UserGames( gameID, userID, gameStatus, move_num, last_bet_amount, last_bet_won_lost) VALUES (?, ?, ?, ?, ?, ?)';
+  connection.query(query, [game_id, user_id,  game_status, move_num, last_bet_amount, last_bet_won_lost], (err, result) => {
       if (err) {
         console.error('Error executing query:', err);
         res.status(500).send('Internal Server Error');

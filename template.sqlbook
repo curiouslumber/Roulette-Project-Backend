@@ -48,7 +48,7 @@ CREATE TABLE UserDashboard (
 )
 -- SQLBook: Code
 CREATE TABLE UserGames(
-    gameID INT PRIMARY KEY AUTO_INCREMENT,
+    gameID INT,
     userID INT,
     gameStatus VARCHAR(20),
     move_num INT,
@@ -56,7 +56,15 @@ CREATE TABLE UserGames(
     last_bet_won_lost VARCHAR(20),
     FOREIGN KEY(userID) REFERENCES Users(user_id)
 )
+-- SQLBook: Code
+DROP TABLE `UserGames`
 -- SQLBook: Markup
 ### Performing  Functions on table
 -- SQLBook: Code
 SELECT user_id, DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM `ActiveUsers`
+-- SQLBook: Code
+INSERT INTO 'UserGames'' (gameID, userID, gameStatus, move_num, last_bet_amount, last_bet_won_lost) VALUES (2, 1, 'active', 1, 100, 'won')
+-- SQLBook: Code
+SELECT * FROM `UserGames`
+-- SQLBook: Code
+SELECT MAX(gameID) FROM `UserGames`

@@ -17,6 +17,9 @@ SELECT * FROM `UserGames`
 -- SQLBook: Markup
 ### Creating Tables for the database 
 -- SQLBook: Code
+-- Active: 1701694913539@@localhost@3306@roulette_game
+USE roulette_game
+-- SQLBook: Code
 -- Active: 1701694913539@@localhost@3306@roulette
 CREATE TABLE Users(
     user_id INT AUTO_INCREMENT PRIMARY KEY,

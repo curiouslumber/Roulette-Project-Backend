@@ -1,15 +1,15 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = 3000;
 
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'roulette_game'
+  host: 'localhost',
+  user: 'root',
+  password: 'password',
+  database: 'roulette_game'
 });
 
 // Body parser middleware to parse POST request bodies
@@ -321,4 +321,4 @@ app.delete('/users/:id', (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, '192.168.1.35' );
+app.listen(PORT, 'localhost' );

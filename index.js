@@ -195,9 +195,9 @@ app.post('/users/dashboard', (req, res) => {
 // Start a new game
 app.post('/users/:id/game', (req, res) => {
   const userId = req.params.id;
-  const { user_id, move_num, game_status, last_bet_amount, last_bet_won_lost} = req.body;
-  const query = 'INSERT INTO UserGames( userID, moveNum, gameStatus, last_bet_amount, last_bet_won_lost) VALUES (?, ?, ?, ?, ?)';
-  connection.query(query, [user_id, move_num, game_status, last_bet_amount, last_bet_won_lost], (err, result) => {
+  const { user_id, game_status, move_num, last_bet_amount, last_bet_won_lost} = req.body;
+  const query = 'INSERT INTO UserGames( userID, gameStatus, move_num, last_bet_amount, last_bet_won_lost) VALUES (?, ?, ?, ?, ?)';
+  connection.query(query, [user_id,  game_status, move_num, last_bet_amount, last_bet_won_lost], (err, result) => {
       if (err) {
         console.error('Error executing query:', err);
         res.status(500).send('Internal Server Error');
@@ -320,5 +320,19 @@ app.delete('/users/:id', (req, res) => {
   });
 });
 
+// Clear all games
+app.delete('/games', (req, res) => {
+  const query = 'DELETE FROM UserGames';
+
+  connection.query(query, (err, result) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      res.status(204).send();
+    });
+});
+
 // Start the server
-app.listen(PORT, 'localhost' );
+app.listen(PORT, '192.168.1.35' );

@@ -47,12 +47,15 @@ CREATE TABLE UserDashboard (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 )
 -- SQLBook: Code
+SELECT * FROM `UserDashboard`
+-- SQLBook: Code
 CREATE TABLE UserGames(
     gameID INT,
     userID INT,
     gameStatus VARCHAR(20),
     move_num INT,
     last_bet_amount INT,
+    last_bet_win_amount INT,
     last_bet_won_lost VARCHAR(20),
     FOREIGN KEY(userID) REFERENCES Users(user_id)
 )
@@ -68,3 +71,8 @@ INSERT INTO 'UserGames'' (gameID, userID, gameStatus, move_num, last_bet_amount,
 SELECT * FROM `UserGames`
 -- SQLBook: Code
 SELECT MAX(gameID) FROM `UserGames`
+-- SQLBook: Code
+SELECT * FROM `UserDashboard`
+-- SQLBook: Code
+-- select only unique number of games played from user games by gameid
+SELECT * FROM `UserGames` HAVING `gameStatus` = 'started' AND `userID` = 1

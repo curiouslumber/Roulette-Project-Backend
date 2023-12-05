@@ -107,6 +107,20 @@ app.get('/users/active/:id', (req, res) => {
   });
 });
 
+// Get all active users
+app.get('/users/active/active/all', (req, res) => {
+  const query = `SELECT user_id,  DATE_FORMAT(last_active_date, '%d-%m-%Y') AS last_active_date , last_active_time FROM ActiveUsers`;
+
+  connection.query(query, (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      res.json(results);
+    });
+});
+
 // Get all user dashboards
 app.get('/users/dashboard/dashboard', (req, res) => {
   const query = 'SELECT * FROM UserDashboard';
@@ -209,9 +223,9 @@ app.post('/users/dashboard', (req, res) => {
 // Start a new game
 app.post('/users/:id/game', (req, res) => {
   const userId = req.params.id;
-  const { game_id, user_id, game_status, move_num, last_bet_amount, last_bet_won_lost} = req.body;
-  const query = 'INSERT INTO UserGames( gameID, userID, gameStatus, move_num, last_bet_amount, last_bet_won_lost) VALUES (?, ?, ?, ?, ?, ?)';
-  connection.query(query, [game_id, user_id,  game_status, move_num, last_bet_amount, last_bet_won_lost], (err, result) => {
+  const { game_id, user_id, game_status, move_num, last_bet_amount, last_bet_win_amount, last_bet_won_lost} = req.body;
+  const query = 'INSERT INTO UserGames( gameID, userID, gameStatus, move_num, last_bet_amount, last_bet_win_amount, last_bet_won_lost) VALUES (?, ?, ?, ?, ? , ?, ?)';
+  connection.query(query, [game_id, user_id,  game_status, move_num, last_bet_amount, last_bet_win_amount, last_bet_won_lost], (err, result) => {
       if (err) {
         console.error('Error executing query:', err);
         res.status(500).send('Internal Server Error');
@@ -255,8 +269,7 @@ app.put('/users/dashboard/deposit/:id', (req, res) => {
 );
 
 
-
-// Update Active Userimplements BroadcastReceiver 
+// Update Active User
 app.put('/users/active/:id', (req, res) => {
   const userId = req.params.id;
   const { last_active_date, last_active_time } = req.body;
@@ -270,6 +283,38 @@ app.put('/users/active/:id', (req, res) => {
     }
     res.status(204).send();
   });
+});
+
+// Update Dashboard with user_id
+app.put('/users/dashboard/:id', (req, res) => {
+  const userId = req.params.id;
+  const { number_of_games_played, number_of_wins, number_of_lossess, winning_amount, total_amount_won, total_amount_lost } = req.body;
+  const query = 'UPDATE UserDashboard SET  number_of_games_played = ?, number_of_wins = ?, number_of_lossess = ?, winning_amount = ?, total_amount_won = ?, total_amount_lost = ? WHERE user_id = ?';
+
+  connection.query(query, [number_of_games_played, number_of_wins, number_of_lossess, winning_amount, total_amount_won, total_amount_lost, userId], (err, result) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      res.status(204).send();
+    });
+});
+
+// Update dashboard balance by user id
+app.put('/users/dashboard/balance/:id', (req, res) => {
+  const userId = req.params.id;
+  const { current_balance } = req.body;
+  const query = 'UPDATE UserDashboard SET current_balance = ? WHERE user_id = ?';
+
+  connection.query(query, [current_balance, userId], (err, result) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      res.status(204).send();
+    });
 });
 
 // Delete Active User with user_id

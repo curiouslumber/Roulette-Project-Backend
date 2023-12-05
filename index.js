@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 
+const URL = '192.168.1.35';
 const app = express();
 const PORT = 3000;
 
@@ -394,4 +395,4 @@ app.delete('/games', (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, '192.168.1.35' );
+app.listen(PORT, URL );

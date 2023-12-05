@@ -76,3 +76,8 @@ SELECT * FROM `UserDashboard`
 -- SQLBook: Code
 -- select only unique number of games played from user games by gameid
 SELECT * FROM `UserGames` HAVING `gameStatus` = 'started' AND `userID` = 1
+-- SQLBook: Code
+-- Check if userid is user or admin from Users table
+SELECT role FROM `Users` WHERE `user_id` = 1
+-- SQLBook: Code
+SELECT * FROM `UserGames` WHERE  last_bet_won_lost = 'Lost' 

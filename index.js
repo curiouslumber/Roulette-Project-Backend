@@ -19,21 +19,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes for CRUD operations
 
-// Create
-app.post('/users', (req, res) => {
-  const {name,   email, password, role } = req.body;
-  const query = 'INSERT INTO Users (name, email, password, role) VALUES (?, ?, ?, ?)';
 
-  connection.query(query, [name, email, password, role], (err, result) => {
-    if (err) {
-      console.error('Error executing query:', err);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
-
-    res.json({ id: result.insertId, name, email, password, role });
-  });
-});
+// GET Requests
 
 // Read all
 app.get('/users', (req, res) => {
@@ -122,6 +109,26 @@ app.get('/users/active/active/all', (req, res) => {
     });
 });
 
+// Get role of user with user_id
+app.get('/users/role/:id', (req, res) => {
+  const userId = req.params.id;
+  const query = 'SELECT role FROM Users WHERE user_id = ?';
+
+  connection.query(query, [userId], (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+
+      if (results.length === 0) {
+        res.status(404).send('User not found');
+      } else {
+        res.json(results[0]);
+      }
+    });
+});
+
 // Get all user dashboards
 app.get('/users/dashboard/dashboard', (req, res) => {
   const query = 'SELECT * FROM UserDashboard';
@@ -206,6 +213,25 @@ app.get('/users/:id/game', (req, res) => {
     });
 });
 
+
+// POST Requests
+
+// Create new user
+app.post('/users', (req, res) => {
+  const {name,   email, password, role } = req.body;
+  const query = 'INSERT INTO Users (name, email, password, role) VALUES (?, ?, ?, ?)';
+
+  connection.query(query, [name, email, password, role], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json({ id: result.insertId, name, email, password, role });
+  });
+});
+
 // Create User Dashboard
 app.post('/users/dashboard', (req, res) => {
   const { user_id } = req.body;
@@ -251,6 +277,8 @@ app.post('/users/active', (req, res) => {
     res.status(201).send('User added to active users');
   });
 });
+
+// Put Requests
 
 // Update deposit amount with new deposit amount using user_id and update current balance such that current balance.
 app.put('/users/dashboard/deposit/:id', (req, res) => {
@@ -318,6 +346,8 @@ app.put('/users/dashboard/balance/:id', (req, res) => {
     });
 });
 
+// Delete Requests
+
 // Delete Active User with user_id
 app.delete('/users/active/:id', (req, res) => {
   const userId = req.params.id;
@@ -357,8 +387,6 @@ app.delete('/users/dashboard/:id', (req, res) => {
     }
   });
 });
-
-
 
 // Delete
 app.delete('/users/:id', (req, res) => {
